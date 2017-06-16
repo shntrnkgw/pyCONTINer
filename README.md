@@ -2,7 +2,7 @@
 A Python/numpy/scipy implementation of the famous inverse Laplace transformation algorithm CONTIN
 
 ## Overview
-This is an re-implementation of the famous inverse Laplace transformation (ILT) 
+This is a re-implementation of the famous inverse Laplace transformation (ILT) 
 algorithm _CONTIN_ using Python 2.7, numpy, and scipy. 
 
 The original _CONTIN_ program, written in FORTRAN, was developed by 
@@ -14,7 +14,7 @@ over the decades,
 the difficulty in understanding the original FORTRAN source code 
 makes it a black box, which I, as a scientist, hate more than anything. 
 
-So, I decided to write my implementation of _CONTIN_ algorithm that is 
+That is why I decided to write my implementation of _CONTIN_ algorithm that is 
 (hopefully) comprehensive to the users. 
 
 In developing this program, I intensively referenced a paper 
@@ -53,7 +53,9 @@ gamma, x = contin.CONTIN(tau, g1, N_gamma=64, range_gamma=[1e-4, 1e4], alpha=1.0
 
 ## ToDo
 - make it more object-oriented
-- compare with the legacy CONTIN
+- compare result with that from Provencher's CONTIN
 
 ## References
 1. Scotti, A. et al "The CONTIN algorithm and its application to determine the size distribution of microgel suspensions", J. Chem. Phys. **2015**, _142_, 234905. doi: [10.1063/1.4921686](http://dx.doi.org/10.1063/1.4921686)
+
+2. [pyCONTIN](https://github.com/kanhua/pyCONTIN) - a Python wrapper to the original Provencher's _CONTIN_
