@@ -7,6 +7,7 @@ Created on 2017/06/15
 
 import numpy as np
 from scipy import optimize
+import time
 
 __author__ = "Shintaro NAKAGAWA"
 __email__ = "snaka@iis.u-tokyo.ac.jp"
@@ -38,6 +39,10 @@ def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, f
     
     N_tau = len(tau)
     
+    if verbose:
+        tm = time.time()
+        print "Preparing arrays...", 
+    
     # gamma-axis of the solution vector
     gamma = np.logspace(np.log10(range_gamma[0]), 
                         np.log10(range_gamma[1]), 
@@ -48,6 +53,9 @@ def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, f
     # matrix that transforms the solution to the correlation function
     # i.e., g1 = A.x
     A = np.stack([np.exp(-gamma*t) for t in tau])
+    
+    if verbose:
+        print "done. (ca. {0:f} sec). ".format(time.time() - tm)
     
     # define the function to minimize. 
     def V(u):
@@ -60,11 +68,18 @@ def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, f
         
         return U + R
     
+    if verbose:
+        print "Minimizing..."
+        tm = time.time()
+
     # minimize V(x)
     # so far, the Powell algorithm is the fastest & most reliable method. 
     res = optimize.minimize(V, x, 
                             method="Powell", 
                             options={"disp": verbose, "maxiter": N_gamma*128})
+    
+    if verbose:
+        print "Minimization done (ca. {0:f} sec). ".format(time.time() - tm)
     
     xa = np.abs(res.x)
     res.x = xa
@@ -78,8 +93,7 @@ def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, f
     else:
         return gamma, xa
 
-
-
+    
 if __name__ == '__main__':
     
     from matplotlib import pyplot
@@ -92,7 +106,7 @@ if __name__ == '__main__':
                              alpha=0.1, 
                              verbose=True, 
                              reconst=True)
-    
+        
     pyplot.semilogx()
     
     axl = pyplot.gca()
