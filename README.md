@@ -18,7 +18,7 @@ That is why I decided to write my implementation of _CONTIN_ algorithm that is
 (hopefully) comprehensive to the users. 
 
 In developing this program, I intensively referenced a paper 
-by Scotti and coworkers (ref 1), 
+by Scotti and coworkers (ref 2), 
 in which the essence of the _CONTIN_ algorithm is explained 
 in an extremely comprehensive manner. 
 
@@ -42,7 +42,11 @@ gamma, x = contin.CONTIN(tau, g1, N_gamma=64, range_gamma=[1e-4, 1e4], alpha=1.0
 ```
 `N_gamma` is the length of the output decay rate array. 
 `range_gamma` specifies the lower and upper limit of the output decay rate. 
-`alpha` is the parameter called _regularizer_ (see ref 1 for detail). 
+`alpha` is the parameter called _regularizer_ (see ref 2 for detail). 
+
+Additional flags are available to control the verbosity and output of the method; 
+- `verbose`: if `True`, prints the progess and message from the minimization method to stdout. 
+- `reconst`: if `True`, returns `g1` reconstructed from the solution `x` in addition to `gamma` and `x`. 
 
 ## Caution & disclaimer
 - This is my personal project and therefore has nothing to do with any institution. 
@@ -52,10 +56,10 @@ gamma, x = contin.CONTIN(tau, g1, N_gamma=64, range_gamma=[1e-4, 1e4], alpha=1.0
 
 
 ## ToDo
-- make it more object-oriented
 - compare result with that from Provencher's CONTIN
 
 ## References
-1. Scotti, A. et al "The CONTIN algorithm and its application to determine the size distribution of microgel suspensions", J. Chem. Phys. **2015**, _142_, 234905. doi: [10.1063/1.4921686](http://dx.doi.org/10.1063/1.4921686)
+1. [s-provecher.com](http://s-provencher.com/)
+2. Scotti, A. et al "The CONTIN algorithm and its application to determine the size distribution of microgel suspensions", J. Chem. Phys. **2015**, _142_, 234905. doi: [10.1063/1.4921686](http://dx.doi.org/10.1063/1.4921686)
 
-2. [pyCONTIN](https://github.com/kanhua/pyCONTIN) - a Python wrapper to the original Provencher's _CONTIN_
+3. [pyCONTIN](https://github.com/kanhua/pyCONTIN) - a Python wrapper to the original Provencher's _CONTIN_

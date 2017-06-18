@@ -103,3 +103,7 @@ ENV/
 /.pydevproject
 /.settings/
 /contin_test.py
+/cycontin.c
+/cycontin.pyx
+/setup.py
+/.externalToolBuilders/

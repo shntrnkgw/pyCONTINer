@@ -9,9 +9,29 @@ import numpy as np
 from scipy import optimize
 import time
 
+# import powell
+
+'''
+try:
+    import cycontin
+except ImportError:
+    IS_CYCONTIN_AVAILABLE = False
+else:
+    IS_CYCONTIN_AVAILABLE = True
+'''
+
 __author__ = "Shintaro NAKAGAWA"
 __email__ = "snaka@iis.u-tokyo.ac.jp"
 __version__ = "1.0"
+
+'''
+def CCONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, full_result=False):
+    assert IS_CYCONTIN_AVAILABLE
+    try:
+        return cycontin.CONTIN(tau, g1, N_gamma, min(range_gamma), max(range_gamma), alpha, verbose, reconst, full_result)
+    except (RuntimeError):
+        raise
+'''
 
 def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, full_result=False):
     '''
@@ -77,6 +97,7 @@ def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, f
     res = optimize.minimize(V, x, 
                             method="Powell", 
                             options={"disp": verbose, "maxiter": N_gamma*128})
+    # res = powell._minimize_powell(V, x, maxiter=N_gamma*128, disp=verbose)
     
     if verbose:
         print "Minimization done (ca. {0:f} sec). ".format(time.time() - tm)
@@ -98,12 +119,14 @@ if __name__ == '__main__':
     
     from matplotlib import pyplot
     
-    tau, g1 = np.loadtxt("test.txt")
+    # tau, g1 = np.loadtxt("test.txt")
+    tau = np.logspace(-4, 4, 512)
+    g1 = 0.3*np.exp(-0.5*tau) + 0.3*np.exp(-1.0*tau) + 0.3*np.exp(-2.0*tau)
     
     gamma, G, g1_re = CONTIN(tau, g1, 
                              N_gamma=64, 
                              range_gamma=[1e-4, 1e4], 
-                             alpha=0.1, 
+                             alpha=0.5, 
                              verbose=True, 
                              reconst=True)
         
