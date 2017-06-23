@@ -107,3 +107,7 @@ ENV/
 /cycontin.pyx
 /setup.py
 /.externalToolBuilders/
+/hirosawa/
+/test/
+/.DS_Store
+/cython/

@@ -9,29 +9,9 @@ import numpy as np
 from scipy import optimize
 import time
 
-# import powell
-
-'''
-try:
-    import cycontin
-except ImportError:
-    IS_CYCONTIN_AVAILABLE = False
-else:
-    IS_CYCONTIN_AVAILABLE = True
-'''
-
 __author__ = "Shintaro NAKAGAWA"
 __email__ = "snaka@iis.u-tokyo.ac.jp"
 __version__ = "1.0"
-
-'''
-def CCONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, full_result=False):
-    assert IS_CYCONTIN_AVAILABLE
-    try:
-        return cycontin.CONTIN(tau, g1, N_gamma, min(range_gamma), max(range_gamma), alpha, verbose, reconst, full_result)
-    except (RuntimeError):
-        raise
-'''
 
 def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, full_result=False):
     '''
@@ -56,12 +36,9 @@ def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, f
     @raise RuntimeError: will be raised when the minimization does not converge. 
     '''
     assert len(tau) == len(g1)
-    
-    N_tau = len(tau)
-    
+        
     if verbose:
         tm = time.time()
-        print "Preparing arrays...", 
     
     # gamma-axis of the solution vector
     gamma = np.logspace(np.log10(range_gamma[0]), 
@@ -74,9 +51,6 @@ def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, f
     # i.e., g1 = A.x
     A = np.stack([np.exp(-gamma*t) for t in tau])
     
-    if verbose:
-        print "done. (ca. {0:f} sec). ".format(time.time() - tm)
-    
     # define the function to minimize. 
     def V(u):
         # prevent any element of the solution vector from being negative. 
@@ -87,28 +61,23 @@ def CONTIN(tau, g1, N_gamma, range_gamma, alpha, verbose=False, reconst=False, f
         R = np.power(alpha * np.linalg.norm(np.diff(np.diff(ua))), 2.0)
         
         return U + R
-    
-    if verbose:
-        print "Minimizing..."
-        tm = time.time()
 
     # minimize V(x)
     # so far, the Powell algorithm is the fastest & most reliable method. 
     res = optimize.minimize(V, x, 
-                            method="Powell", 
+                            method="Nelder-Mead", 
                             options={"disp": verbose, "maxiter": N_gamma*128})
-    # res = powell._minimize_powell(V, x, maxiter=N_gamma*128, disp=verbose)
     
     if verbose:
-        print "Minimization done (ca. {0:f} sec). ".format(time.time() - tm)
+        print("Done (ca. {0:f} sec). ".format(time.time() - tm))
     
     xa = np.abs(res.x)
     res.x = xa
     
     if full_result:
         return res
-    elif not res.success:
-        raise RuntimeError(res.message)
+    # elif not res.success:
+    #     raise RuntimeError(res.message)
     elif reconst:
         return gamma, xa, A.dot(xa)
     else:
@@ -129,7 +98,7 @@ if __name__ == '__main__':
                              alpha=0.5, 
                              verbose=True, 
                              reconst=True)
-        
+    
     pyplot.semilogx()
     
     axl = pyplot.gca()
